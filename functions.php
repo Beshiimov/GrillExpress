@@ -30,9 +30,93 @@ function site_scripts() {
   
   wp_enqueue_script('swiper-min', get_template_directory_uri() . '/js/swiper.min.js', [], $version, true);  
   wp_enqueue_script('script-js', get_template_directory_uri() . '/js/script.js', ['swiper-min'], $version, true);  
-  wp_enqueue_script('ya-map', 'https://api-maps.yandex.ru/2.1/?lang=ru_RU&amp;apikey=4efb335a-a405-41a7-94e9-2ca5e54a5708', [], $version, true);  
+  wp_enqueue_script('ya-map', 'https://api-maps.yandex.ru/2.1/?lang=ru_RU&amp;apikey=4efb335a-a405-41a7-94e9-2ca5e54a5708', ['swiper-min', 'script-js'], $version, true);  
 
-  wp_localize_script('main-js', 'WPJS', [
-  'siteUrl' => get_template_directory_uri(),
+  // wp_localize_script('main-js', 'WPJS', [
+  // 'siteUrl' => get_template_directory_uri(),
+  // ]);
+}
+
+add_action( 'after_setup_theme', 'theme_support' );
+function theme_support() {
+  register_nav_menu( 'menu_main_header', 'Меню в шапке' );
+  add_theme_support('post-thumbnails');
+}
+
+add_action( 'after_setup_theme', 'crb_load' );
+function crb_load() {
+    require_once( 'includes/carbon-fields/vendor/autoload.php' );
+    \Carbon_Fields\Carbon_Fields::boot();
+}
+
+
+add_action('carbon_fields_register_fields', 'register_carbon_fields');
+function register_carbon_fields() {
+  require_once( 'includes/carbon-fields-options/theme-options.php' );
+  require_once( 'includes/carbon-fields-options/post-meta.php' );
+}
+
+add_action('init', 'create_global_variable');
+function create_global_variable() {
+  global $pizza_time;
+  $pizza_time = [
+    'phone' => carbon_get_theme_option('site_phone'),
+    'phone_digits' => carbon_get_theme_option('site_phone_digits'),
+    'vk_url' => carbon_get_theme_option('vk_url'),
+    'instagram_url' => carbon_get_theme_option('instagram_url'),
+    'telegram_url' => carbon_get_theme_option('telegram_url'),
+  ];
+}
+
+
+
+function convertToWebpSrc($src) {
+  $src_webp = $src . '.webp';
+  return str_replace('uploads', 'uploads-webpc/uploads', $src_webp);
+}
+
+
+add_action( 'init', 'register_post_types' );
+function register_post_types() {
+  register_post_type('product', [
+    'labels' => [
+      'name'               => 'Товары', // основное название для типа записи
+      'singular_name'      => 'Товар', // название для одной записи этого типа
+      'add_new'            => 'Добавить товар', // для добавления новой записи
+      'add_new_item'       => 'Добавление товара', // заголовка у вновь создаваемой записи в админ-панели.
+      'edit_item'          => 'Редактирование товара', // для редактирования типа записи
+      'new_item'           => 'Новый товар', // текст новой записи
+      'view_item'          => 'Смотреть товар', // для просмотра записи этого типа.
+      'search_items'       => 'Искать товар', // для поиска по этим типам записи
+      'not_found'          => 'Не найдено', // если в результате поиска ничего не было найдено
+      'not_found_in_trash' => 'Не найдено в корзине', // если не было найдено в корзине
+      'menu_name'          => 'Товары', // название меню
+    ],
+    'menu_icon'          => 'dashicons-cart',
+    'public'             => true,
+    'menu_position'      => 5,
+    'supports'           => ['title', 'editor', 'thumbnail', 'excerpt'],
+    'has_archive'        => true,
+    'rewrite'            => ['slug' => 'products']
+   ] );
+
+
+   register_taxonomy('product-categories', 'product', [
+    'labels'        => [
+      'name'                        => 'Категории товаров',
+      'singular_name'               => 'Категория товароа',
+      'search_items'                =>  'Искать категории',
+      'popular_items'               => 'Популярные категории',
+      'all_items'                   => 'Все категории',
+      'edit_item'                   => 'Изменить категорию',
+      'update_item'                 => 'Обновить категорию',
+      'add_new_item'                => 'Добавить новую категорию',
+      'new_item_name'               => 'Новое название категории',
+      'separate_items_with_commas'  => 'Отделить категории запятыми',
+      'add_or_remove_items'         => 'Добавить или удалить категорию',
+      'choose_from_most_used'       => 'Выбрать самую популярную категорию',
+      'menu_name'                   => 'Категории',
+    ],
+    'hierarchical'  => true,
   ]);
 }
