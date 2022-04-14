@@ -24,13 +24,12 @@ function site_scripts() {
   wp_deregister_script( 'wp-embed' );
 
   wp_enqueue_style('main-style', get_stylesheet_uri(), [], $version);
-  wp_enqueue_style('swiper-min', get_template_directory_uri() . '/css/swiper.min.css', [], $version);
-  wp_enqueue_style('style-css', get_template_directory_uri() . '/css/style.css', ['swiper-min'], $version);
+  wp_enqueue_style('style-css', get_template_directory_uri() . '/css/style.css', [], $version);
 
   
-  wp_enqueue_script('swiper-min', get_template_directory_uri() . '/js/swiper.min.js', [], $version, true);  
-  wp_enqueue_script('script-js', get_template_directory_uri() . '/js/script.js', ['swiper-min'], $version, true);  
-  wp_enqueue_script('ya-map', 'https://api-maps.yandex.ru/2.1/?lang=ru_RU&amp;apikey=4efb335a-a405-41a7-94e9-2ca5e54a5708', ['swiper-min', 'script-js'], $version, true);  
+  wp_enqueue_script('smoothscroll', get_template_directory_uri() . '/js/smoothscroll.js', [], $version, true);  
+  wp_enqueue_script('script-js', get_template_directory_uri() . '/js/script.js', [], $version, true);  
+  wp_enqueue_script('ya-map', 'https://api-maps.yandex.ru/2.1/?lang=ru_RU&amp;apikey=4efb335a-a405-41a7-94e9-2ca5e54a5708', ['script-js'], $version, true);  
 
   // wp_localize_script('main-js', 'WPJS', [
   // 'siteUrl' => get_template_directory_uri(),

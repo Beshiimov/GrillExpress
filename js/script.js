@@ -51,17 +51,29 @@ function lazyMapCheck () {
 }
 
 
-const swiper = new Swiper('.swiper', {
-  speed: 1000,
-  spaceBetween: 18,
-  slidesPerView: "auto",
-  touchRatio: 0.5,
-  autoHeight: true,
-  centeredSlides: true,
-  autoplay: {
-    delay: 5000,
-    pauseOnMouseEnter: true,
-  },
+window.addEventListener('load', function() {
+  const mediaQuery = window.matchMedia('(min-width: 767px)');
+  function handleTabletChange(e) {
+    if (e.matches && popup.classList.contains(`_active`)) {
+      hamburgerPopup();
+    };
+  };
+  mediaQuery.addListener(handleTabletChange);
+  handleTabletChange(mediaQuery);
+  
+  
+  const scrollUp = document.querySelectorAll(`.scroll-up`);
+  scrollUp.forEach(item => {
+    item.addEventListener(`click`, e => {
+      e.preventDefault
+      window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
+    });
+  });
+  
+  document.querySelector('.scroll-down').addEventListener('click', function(e) {
+    e.preventDefault();
+    document.querySelector('.categories').scrollIntoView({ behavior: 'smooth' });
+  });
 });
 
 function scrollBlock () {
@@ -85,27 +97,6 @@ function hamburgerPopup () {
   scrollBlock();
 };
 
-const mediaQuery = window.matchMedia('(min-width: 767px)');
-function handleTabletChange(e) {
-  if (e.matches && popup.classList.contains(`_active`)) {
-    hamburgerPopup();
-  };
-};
-mediaQuery.addListener(handleTabletChange);
-handleTabletChange(mediaQuery);
-
-
-const scrollUp = document.querySelectorAll(`.scroll-up`);
-scrollUp.forEach(item => {
-  item.addEventListener(`click`, () => {
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth",
-    });
-  });
-});
-
-
 
 const basketButton = document.querySelector(`.basket-button`);
 
@@ -122,7 +113,7 @@ basketButton.addEventListener(`click`, clickBasket = () => {
   const totalPriceDOMElement = basketWindow.querySelector(`.total__title`);
   const cartItemsCounterDOMElement = document.querySelector(`.basket-quantity`);
   const cartItemsCounterDOMElementWindow = document.querySelector(`.total-quantity-products`);
-  const snacks = document.querySelector(`.swiper-wrapper`);
+  const snacks = document.querySelector(`.snack`);
   
   const cart = JSON.parse(localStorage.getItem(`cart`)) || {};
 
@@ -242,6 +233,10 @@ basketButton.addEventListener(`click`, clickBasket = () => {
   };
 
   const productDelete = (id, cartItemDOMElement) => {
+    const productName = id.replace(/ /g, '_').replace(/[.]/g, '-');
+    snacks.querySelector(`.${productName}`).querySelector(`.snacks__price`).textContent = cart[id].productPrice;
+    
+     
     delete cart[id];
     cartItemDOMElement.parentNode.removeChild(cartItemDOMElement);
     updateCart();
@@ -296,6 +291,7 @@ basketButton.addEventListener(`click`, clickBasket = () => {
   }
 
   const updateSnacksQuantity = (id, quantity) => {
+    console.log(id);
     if (quantity > 0) {
       const product = snacks.querySelector(`.${id}`);
       const cartItemQuantityDOMElement = product.querySelector(`.snacks-quantity`);

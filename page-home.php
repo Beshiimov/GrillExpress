@@ -14,6 +14,7 @@ Template Name: Главная Страница
 		$top_img_src_webp = convertToWebpSrc($top_img_src);
 	 ?>
 	<section class="hero">
+		<div class="scroll-down"></div>
 		<div class="hero__body">
 			<h1>
 				<?php echo carbon_get_post_meta( $page_id, 'top_info' )?>
@@ -26,81 +27,46 @@ Template Name: Главная Страница
 				<img src="<?php echo $top_img_src ?>" alt="Тут обои сайта">
 			</picture>
 		</div>
-		<div class="bg-gradient"></div>
 	</section>
 	<section class="category">
 		<div class="categories"></div>
 	</section>
 	<section class="snack">
-		<h2 class="h2 container">
-			<span></span> ХОЛОДНЫЕ ЗАКУСКИ
-		</h2>
-		<div class="swiper">
-			<div class="swiper-wrapper">
-				<div class="swiper-slide snacks product Кола_1-5_Литра">
-					<div class="snacks__img">
-						<img data-src="<?php echo get_template_directory_uri(); ?>/img/cold-snacks/cola.png" src="data:image/gif;base64,R0lGODlhIQAXAIAAAP///wAAACH5BAEAAAEALAAAAAAhABcAAAIajI+py+0Po5y02ouz3rz7D4biSJbmiaaqVQAAOw==" alt="cold-snack">
-					</div>
-					<div class="snacks__body">
-						<h3 class="snacks__title product__title">
-							Кола 1.5 Литра
-						</h3>
-						<p class="snacks__about">
-							Новинка
-						</p>
-						<div class="snacks__buttons">
-							<button class="snacks__basket minus decrease" style="display: none;">-</button>
-							<span class="snacks__price">
-								109
-							</span>
-							<button class="snacks__basket basket__default basketDefault">
-								<span class="basketDefault">В корзину</span>
-								<div class="basket__icon basketDefault">
-									<img class="basketDefault" src="<?php echo get_template_directory_uri(); ?>/img/icon/Buy.svg" alt="Buy">
-								</div>
-							</button>
-							<button class="snacks__basket plus increase" style="display: none;">+</button>
-						</div>
-						<p class="snacks__mass">
-							225
-						</p>
-					</div>
-					<div class="snacks-quantity"></div>
-				</div>
-				<div class="swiper-slide snacks product Суп">
-					<div class="snacks__img">
-						<img data-src="<?php echo get_template_directory_uri(); ?>/img/cold-snacks/cold-snacks-2.jpg" src="data:image/gif;base64,R0lGODlhIQAXAIAAAP///wAAACH5BAEAAAEALAAAAAAhABcAAAIajI+py+0Po5y02ouz3rz7D4biSJbmiaaqVQAAOw==" alt="cold-snack">
-					</div>
-					<div class="snacks__body">
-						<h3 class="snacks__title product__title">
-							Суп
-						</h3>
-						<p class="snacks__about">
-							Новинка
-						</p>
-						<div class="snacks__buttons">
-							<button class="snacks__basket minus decrease" style="display: none;">-</button>
-							<span class="snacks__price">
-								180
-							</span>
-							<button class="snacks__basket basket__default basketDefault">
-								<span class="basketDefault">В корзину</span>
-								<div class="basket__icon basketDefault">
-									<img class="basketDefault" src="<?php echo get_template_directory_uri(); ?>/img/icon/Buy.svg" alt="Buy">
-								</div>
-							</button>
-							<button class="snacks__basket plus increase" style="display: none;">+</button>
-						</div>
-						<p class="snacks__mass">
-							225
-						</p>
-					</div>
-					<div class="snacks-quantity"></div>
-				</div>
+		<div class="snack__category">
+			<h2 class="h2 container">
+				<span></span> ХОЛОДНЫЕ ЗАКУСКИ
+			</h2>
+			
+			<?php  
+				$catalog_products = carbon_get_post_meta( $page_id, 'catalog_products' );
+				$catalog_products_ids = wp_list_pluck($catalog_products, 'id');
+				
+				$catalog_products_args = [
+					'post_type' => 'product',
+					'post_in' => $catalog_products_ids
 
+				]; 
+				$catalog_products_query = new WP_Query( $catalog_products_args ); 
+			?>
 
-			</div>
+			
+			<?php if ( $catalog_products_query->have_posts() ) : ?>
+				<div class="snack__items">
+
+				
+				
+				<!-- цикл -->
+				<?php while ( $catalog_products_query->have_posts() ) : $catalog_products_query->the_post(); ?>
+					<?php get_template_part('product-content');  ?>
+				<?php endwhile; ?>
+
+				<?php wp_reset_postdata(); ?>
+				
+				</div>
+			<?php endif; ?>
+
 		</div>
+
 	</section>
 	<section class="map _preload-section _preloading">
 		<id id="map"></id>
