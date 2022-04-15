@@ -69,7 +69,7 @@ Template Name: Главная Страница
 
 	</section>
 	<section class="map _preload-section _preloading">
-		<id id="map"></id>
+		<div id="map"></div>
 	</section>
 	<section class="basket">
 		<div class="basket-top">

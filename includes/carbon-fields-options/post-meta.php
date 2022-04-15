@@ -33,7 +33,7 @@ Container::make( 'post_meta', 'Дополнительные поля' )
   ->add_tab( 'Информация товара', [
       Field::make( 'text', 'product_price', 'Цена' ),
       Field::make( 'complex', 'product_attributes', 'Атрибуты' )
-      ->set_max(2)
+      ->set_max(5)
       ->add_fields([
         Field::make('text', 'name', 'Название')->set_width(50),
         Field::make('text', 'price', 'Цена')->set_width(50),

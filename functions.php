@@ -40,6 +40,7 @@ add_action( 'after_setup_theme', 'theme_support' );
 function theme_support() {
   register_nav_menu( 'menu_main_header', 'Меню в шапке' );
   add_theme_support('post-thumbnails');
+  add_image_size('product', 650, 330, true);  
 }
 
 add_action( 'after_setup_theme', 'crb_load' );

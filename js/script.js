@@ -119,7 +119,7 @@ basketButton.addEventListener(`click`, clickBasket = () => {
 
   
   const renderCartItem = ({ productName, productPrice, productAbout, src, quantity }) => {
-    const productNameWithoutProbels = productName.replace(/ /g, '_').replace(/[.]/g, '-'); 
+    const productNameWithoutProbels = productName.replace(/ /g, '_').replace(/[.,]/g, '-'); 
     const cartItemDOMElement = document.createElement(`div`);
 
     const cartItemTemplate = `
@@ -160,6 +160,11 @@ basketButton.addEventListener(`click`, clickBasket = () => {
   const saveCart = () => {
     localStorage.setItem(`cart`, JSON.stringify(cart));
   };
+
+  const snacksAttributes = target => {
+    target.parentNode.classList.toggle(`checked`);
+  }
+    
 
   const checkoutDOMElement = (quantity) => {
     const checkout = document.querySelector(`.total__checkout`);
@@ -233,7 +238,7 @@ basketButton.addEventListener(`click`, clickBasket = () => {
   };
 
   const productDelete = (id, cartItemDOMElement) => {
-    const productName = id.replace(/ /g, '_').replace(/[.]/g, '-');
+    const productName = id.replace(/ /g, '_').replace(/[.,]/g, '-');
     snacks.querySelector(`.${productName}`).querySelector(`.snacks__price`).textContent = cart[id].productPrice;
     
      
@@ -245,7 +250,7 @@ basketButton.addEventListener(`click`, clickBasket = () => {
 
   const addCartItem = (data) => {
     const { productName } = data;
-    const productNameWithoutProbels = productName.replace(/ /g, '_').replace(/[.]/g, '-');
+    const productNameWithoutProbels = productName.replace(/ /g, '_').replace(/[.,]/g, '-');
 
     if (cart[productNameWithoutProbels]) {
       plusQuantity(productNameWithoutProbels);
@@ -371,6 +376,9 @@ basketButton.addEventListener(`click`, clickBasket = () => {
     addEventListener(`click`, e => {
       const target = e.target;
 
+      if (target.classList.contains(`snacks__ingredient-add`)) {
+        snacksAttributes(target);
+      }
       
       if (target.classList.contains(`basketDefault` )) {
         e.preventDefault();
@@ -383,7 +391,7 @@ basketButton.addEventListener(`click`, clickBasket = () => {
         e.preventDefault();
         const cartItemDOMElement = target.closest(`.product`);
         const productID = cartItemDOMElement.querySelector(`.product__title`).textContent.trim();
-        const idWithoutProbels = productID.replace(/ /g, '_').replace(/[.]/g, '-'); 
+        const idWithoutProbels = productID.replace(/ /g, '_').replace(/[.,]/g, '-'); 
         showBasketButton(idWithoutProbels);
         productDelete(idWithoutProbels, cartItemDOMElement);
       }
@@ -392,7 +400,7 @@ basketButton.addEventListener(`click`, clickBasket = () => {
         e.preventDefault();
         const cartItemDOMElement = target.closest(`.product`);
         const productID = cartItemDOMElement.querySelector(`.product__title`).textContent.trim();
-        const idWithoutProbels = productID.replace(/ /g, '_').replace(/[.]/g, '-'); 
+        const idWithoutProbels = productID.replace(/ /g, '_').replace(/[.,]/g, '-'); 
         
         plusQuantity(idWithoutProbels, cartItemDOMElement, target);
         hideBasketButton(idWithoutProbels);
@@ -403,7 +411,7 @@ basketButton.addEventListener(`click`, clickBasket = () => {
         e.preventDefault();
         const cartItemDOMElement = target.closest(`.product`);
         const productID = cartItemDOMElement.querySelector(`.product__title`).textContent.trim();
-        const idWithoutProbels = productID.replace(/ /g, '_').replace(/[.]/g, '-'); 
+        const idWithoutProbels = productID.replace(/ /g, '_').replace(/[.,]/g, '-'); 
         
         showSnacksQuantity(idWithoutProbels, cartItemDOMElement);
         hideBasketButton(idWithoutProbels);
@@ -415,7 +423,7 @@ basketButton.addEventListener(`click`, clickBasket = () => {
         e.preventDefault();
         const cartItemDOMElement = target.closest(`.product`);
         const productID = cartItemDOMElement.querySelector(`.product__title`).textContent.trim();
-        const idWithoutProbels = productID.replace(/ /g, '_').replace(/[.]/g, '-'); 
+        const idWithoutProbels = productID.replace(/ /g, '_').replace(/[.,]/g, '-'); 
         hideBasketButton(idWithoutProbels);
         showSnacksQuantity(idWithoutProbels, cartItemDOMElement);
         updateCart();
@@ -426,7 +434,6 @@ basketButton.addEventListener(`click`, clickBasket = () => {
   cartInit();
 
 })();
-
 
 
 function mapInit () {

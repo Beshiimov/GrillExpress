@@ -295,7 +295,7 @@ main {
   filter: brightness(85%);
 }
 
-.basket-button p:first-child {
+.basket-button span:first-child {
   color: #f5f8fa;
   font-weight: 600;
   font-size: 14px;
@@ -444,7 +444,6 @@ main {
   font-weight: bold;
   font-size: 32px;
   text-transform: uppercase;
-  font-family: Arial;
 }
 
 .h2>span {
@@ -455,22 +454,22 @@ main {
 }
 .snack__items {
   max-width: 1600px;
-  margin: 0 auto;
+  margin: 15px auto;
   display: flex;
   flex-flow: wrap row;
 }
 
 .snacks {
   width: 100%;
+  min-height: 110%;
   flex: 1 1 300px;  
   margin: 10px;
-  height: 100%;
   -webkit-transition: all 0.3s ease;
   -o-transition: all 0.3s ease;
   transition: all 0.3s ease;
-  margin-bottom: 15px;
   background-color: #f5f8fa;
   border-radius: 12px;
+  position: relative;
 }
 
 .snacks:hover {
@@ -483,8 +482,6 @@ main {
   filter: drop-shadow(0px 0px 10px #a6a7ab);
 }
 
-.snacks__img {
-}
 
 .snacks__img img {
   border-radius: 10px 10px 0 0;
@@ -495,12 +492,12 @@ main {
 
 
 .snacks__body {
-  position: relative;
   padding: 15px 20px;
-  height: 155px;
+  margin-bottom: 50px;
 }
 
 .snacks__title {
+  min-height: 100%;
   font-weight: bolder;
   font-size: 22px;
   line-height: 27px;
@@ -508,11 +505,12 @@ main {
 }
 
 .snacks__about {
+  width: 100%;
   cursor: default;
   font-size: 13px;
   line-height: 17px;
   color: #3d3d3d;
-  margin-bottom: 25px;
+  margin-bottom: 20px;
   -ms-text-overflow: ellipsis;
   -o-text-overflow: ellipsis;
   text-overflow: ellipsis;
@@ -526,8 +524,44 @@ main {
   box-orient: vertical;
 }
 
+.snacks__ingredients {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;  
+}
+
+label {
+  cursor: pointer;
+  flex: 1 1 auto;
+  padding: 4px;
+  margin: 3px 0;
+  border-radius: 5px;
+  text-align: center;
+  transition: all .3s ease;
+  font-style: italic;
+  font-size: 14px;
+  border: 1px solid #4fc775;
+  border-radius: 5px;
+}
+label:not(:last-child) {
+  margin-right: 5px;
+}
+
+label.checked {
+  color: #fff;
+  background-color: #4fc775;
+}
+
+.snacks__ingredients input[type="checkbox"]{
+  -webkit-appearance: none;
+  appearance: none;
+}
+
 .snacks__buttons {
-  height: 45px;
+  position: absolute;
+  left: 15px;
+  right: 15px;
+  bottom: 3%;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -614,10 +648,12 @@ main {
 }
 
 .snacks__mass {
+  color: #fff;
   position: absolute;
   top: 22px;
   right: 16px;
-  font-size: 12px;
+  font-size: 14px;
+  font-style: oblique;
   line-height: 14px;
 }
 
