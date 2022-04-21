@@ -7,15 +7,21 @@
   $product_img_src_webp = convertToWebpSrc($product_img_src);
 
 
+  $product_categories = get_the_terms($product_id, 'product-categories');
+  $product_categories_str = '';
+  foreach ($product_categories as $category) {
+    $product_categories_str .= "$category->slug,";
+  }
+  $product_categories_str = substr($product_categories_str, 0, -1);
+
+
   $title = get_the_title(); 
   $str = preg_replace('/\s+/', '_', $title);
   $productName = preg_replace('/[\s,\.,!]/', '-', $str);;
 ?>
 
 
-
-
-<div class="snacks product <?php  echo $productName; ?>">
+<div class="snacks product <?php echo $productName .' ' ; echo $product_categories_str; ?>" data-category="<?php echo $product_categories_str; ?>">
   <div class="snacks__img">
     <picture>
       <source type="image/webp" srcset="<?php echo $product_img_src_webp; ?>" data-src="data:image/gif;base64,R0lGODlhIQAXAIAAAP///wAAACH5BAEAAAEALAAAAAAhABcAAAIajI+py+0Po5y02ouz3rz7D4biSJbmiaaqVQAAOw==">
@@ -41,9 +47,6 @@
         <?php endforeach; ?>
       </div>
     <?php endif; ?>
-    <p class="snacks__mass">
-      225
-    </p>
   </div>
   <div class="snacks__buttons">
     <button class="snacks__basket minus decrease" style="display: none;">-</button>
@@ -52,9 +55,9 @@
     </span>
     <button class="snacks__basket basket__default basketDefault">
       <span class="basketDefault">В корзину</span>
-      <div class="basket__icon basketDefault">
+      <span class="basket__icon basketDefault">
         <img class="basketDefault" src="<?php echo get_template_directory_uri(); ?>/img/icon/Buy.svg" alt="Buy">
-      </div>
+      </span>
     </button>
     <button class="snacks__basket plus increase" style="display: none;">+</button>
   </div>

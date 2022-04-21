@@ -24,16 +24,14 @@ function site_scripts() {
   wp_deregister_script( 'wp-embed' );
 
   wp_enqueue_style('main-style', get_stylesheet_uri(), [], $version);
-  wp_enqueue_style('style-css', get_template_directory_uri() . '/css/style.css', [], $version);
 
   
-  wp_enqueue_script('smoothscroll', get_template_directory_uri() . '/js/smoothscroll.js', [], $version, true);  
   wp_enqueue_script('script-js', get_template_directory_uri() . '/js/script.js', [], $version, true);  
   wp_enqueue_script('ya-map', 'https://api-maps.yandex.ru/2.1/?lang=ru_RU&amp;apikey=4efb335a-a405-41a7-94e9-2ca5e54a5708', ['script-js'], $version, true);  
 
-  // wp_localize_script('main-js', 'WPJS', [
-  // 'siteUrl' => get_template_directory_uri(),
-  // ]);
+  wp_localize_script('script-js', 'WPJS', [
+    'ajaxUrl' => admin_url('admin-ajax.php'),
+  ]);
 }
 
 add_action( 'after_setup_theme', 'theme_support' );
@@ -62,9 +60,13 @@ function create_global_variable() {
   $pizza_time = [
     'phone' => carbon_get_theme_option('site_phone'),
     'phone_digits' => carbon_get_theme_option('site_phone_digits'),
+    'phone2' => carbon_get_theme_option('site_phone2'),
+    'phone_digits2' => carbon_get_theme_option('site_phone_digits2'),
     'vk_url' => carbon_get_theme_option('vk_url'),
     'instagram_url' => carbon_get_theme_option('instagram_url'),
     'telegram_url' => carbon_get_theme_option('telegram_url'),
+    'min_shipping_price' => carbon_get_theme_option('min_shipping_price'),
+    'ship_price' => carbon_get_theme_option('ship_price'),
   ];
 }
 
@@ -119,4 +121,56 @@ function register_post_types() {
     ],
     'hierarchical'  => true,
   ]);
+};
+
+
+add_action('wp_ajax_send_email', 'grillexpress_send_email');
+add_action('wp_ajax_nopriv_send_email', 'grillexpress_send_email');
+function grillexpress_send_email() {
+  $method = $_SERVER['REQUEST_METHOD'];
+
+  if ($method !== 'POST') {
+    exit();
+  }
+
+  $admin_email = 'grillexpress.mail@grillexpress.mail';
+  $form_subject = 'Заявка с сайта Grillexpress';
+  $message = 'Новый Заказ';
+  $name = $_POST['ФИО'];
+  
+  $color_counter = 1;
+
+  foreach ($_POST as $key => $value) {
+    if ($value === '') {
+      continue;
+    }
+    $color = $color_counter % 2 === 0 ? '#fff' : '#f8f8f8';
+    $message .= "
+      <tr style='background-color: $color;'>
+        <td style='padding: 10px; border: 1px solid #e9e9e9;'>$key</td>
+        <td style='padding: 10px; border: 1px solid #e9e9e9;'>$value</td>
+      </tr>";
+  
+    $color_counter++;
+  }
+  
+  function adopt($name) {
+    return 'Заказ от ' . $name;
+  }
+
+
+  $message = "<table style='width: 100%;'>$message</table>";
+  
+  $headers  = "MIME-Version: 1.0\r\n"; 
+  $headers .= "Content-type: text/html; charset=UTF-8\r\n";
+  $headers .= "From:" . "$form_subject" . " <$admin_email>\r\n";
+  
+  $success_send = wp_mail($admin_email, adopt($name), $message, $headers);
+  
+  if ($success_send) {
+    echo 'success';
+  } else {
+    echo 'error';
+  }
+  wp_die();
 }

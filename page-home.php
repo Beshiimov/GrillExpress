@@ -13,6 +13,7 @@ Template Name: Главная Страница
 		$top_img_src = wp_get_attachment_image_url( $top_img_id, 'full');
 		$top_img_src_webp = convertToWebpSrc($top_img_src);
 	 ?>
+
 	<section class="hero">
 		<div class="scroll-down"></div>
 		<div class="hero__body">
@@ -29,14 +30,32 @@ Template Name: Главная Страница
 		</div>
 	</section>
 	<section class="category">
-		<div class="categories"></div>
+		<nav class="catalog-nav">
+  
+			<?php
+				$catalog_nav = carbon_get_post_meta($page_id, 'catalog_nav');
+				$catalog_nav_ids = wp_list_pluck($catalog_nav, 'id');
+				
+				$catalog_nav_items = get_terms([
+				'include' => $catalog_nav_ids,
+				]);
+			?>
+			<ul class="categories">
+				<li>
+					<button class="catalog-nav__btn _active" type="button" data-filter="all">все</button>
+				</li>
+
+				<?php foreach ($catalog_nav_items as $item) : ?>
+					<li class="catalog-nav__item">
+						<button class="catalog-nav__btn" type="button" data-filter="<?php echo $item->slug; ?>"><?php echo $item->name; ?></button>
+					</li>
+				<?php endforeach; ?>
+
+			</ul>
+		</nav>
 	</section>
 	<section class="snack">
-		<div class="snack__category">
-			<h2 class="h2 container">
-				<span></span> ХОЛОДНЫЕ ЗАКУСКИ
-			</h2>
-			
+		<div class="snack__category">		
 			<?php  
 				$catalog_products = carbon_get_post_meta( $page_id, 'catalog_products' );
 				$catalog_products_ids = wp_list_pluck($catalog_products, 'id');
@@ -77,30 +96,29 @@ Template Name: Главная Страница
 				<span></span> КОРЗИНА <p class="total-quantity-products">0</p>
 			</div>
 		</div>
-		<div class="basket-products">
-		</div>
-
-		<div class="checkout">
-			
-		</div>
-
-		<div class="basket-total">
-			<div class="total__body">
-				<div class="total__title">
-					500
-				</div>
-				<p class="totalEnough">
-					До бесплатной доставки не хватет:
-				</p>
-				<p class="total__need4free">0 </p>
-				<span class="total__need4free-rubles"> ₽</span>
-				<p class="total__min">700</p>
+		<form action="#" enctype="multipart/form-data" method="POST" id="form" class="form-send">
+			<div class="basket-products">
 			</div>
-			<button class="total__checkout">
-				Перейти к заказу
-			</button>
-		</div>
-
+			<div class="checkoutForm"></div>
+			<div class="basket-total">
+				<div class="total__body">
+					<div class="total__title">
+						0
+					</div>
+					<input class="input-total" type="hidden" name="Сумма заказа" value="">
+					<p class="totalEnough">
+						До бесплатной доставки не хватет:
+					</p>
+					<p class="total__need4free">800 </p>
+					<span class="total__need4free-rubles"> ₽</span>
+					<p class="shipping-price"><?php echo carbon_get_theme_option('ship_price');?></p>
+					<p class="total__min"><?php echo carbon_get_theme_option('min_shipping_price');?></p>
+				</div>
+				<button class="total__checkout">
+					Перейти к заказу
+				</button>
+			</div>
+		</form>
 	</section>
 </main>
 
